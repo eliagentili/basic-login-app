@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { AlertsComponent } from './_components/alerts/alerts.component';
 import { LoginComponent } from './_components/login/login.component';
 import { HomeComponent } from './_components/home/home.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent, AlertsComponent, LoginComponent, HomeComponent],
@@ -28,6 +29,7 @@ import { HomeComponent } from './_components/home/home.component';
         disallowedRoutes: ['http://localhost:3000/users/login'],
       },
     }),
+    NgbModule,
   ],
   providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent],

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "basic-login-app": {
+    "app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -65,19 +65,20 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "basic-login-app:build",
-            "proxyConfig": "src/proxy.conf.json"
+            "browserTarget": "app:build",
+            "proxyConfig": "src/proxy.conf.json",
+            "open": true
           },
           "configurations": {
             "production": {
-              "browserTarget": "basic-login-app:build:production"
+              "browserTarget": "app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "basic-login-app:build"
+            "browserTarget": "app:build"
           }
         },
         "test": {
@@ -114,16 +115,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "basic-login-app:serve"
+            "devServerTarget": "app:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "basic-login-app:serve:production"
+              "devServerTarget": "app:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "basic-login-app"
+  "defaultProject": "app"
 }

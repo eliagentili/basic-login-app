@@ -23,8 +23,8 @@ Creare all'interno della cartella il file `dev.env` contenente le variabili d'am
 
 ```
 NODE_ENV=development
-JWT_SECRET=jwkljl234jkl23j4kl23j4lk32j4lk
-MONGODB_URL=mongodb://localhost:27017/basic-login-app
+JWT_SECRET=1234567890abcdefghijklmnopqrstuvwxyz
+MONGODB_URL=mongodb://localhost:27017/app
 PORT=3000
 ```
 

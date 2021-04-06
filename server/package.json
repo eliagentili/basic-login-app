@@ -19,7 +19,7 @@
     "generate-password": "^1.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.5",
-    "mongoose": "^5.12.1",
+    "mongoose": "^5.12.3",
     "node-fetch": "^2.6.1",
     "ssl-express-www": "^3.0.7",
     "validator": "^13.5.2"
