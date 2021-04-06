@@ -10,8 +10,10 @@ import { Router } from '@angular/router';
 export class UsersComponent {
   constructor(private router: Router, private authService: AuthService) {
     // redirect to home if already logged in
-    if (this.authService.userValue) {
-      this.router.navigate(['/']);
+    if (!this.authService.userValue) {
+      this.router.navigate(['/users/login']);
     }
+
+    this.router.navigate(['/']);
   }
 }

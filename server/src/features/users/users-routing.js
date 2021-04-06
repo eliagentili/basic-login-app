@@ -1,7 +1,7 @@
 const express = require('express');
-const User = require('../models/user');
-const auth = require('../middleware/auth');
-const permit = require('../middleware/permit');
+const User = require('./users.model');
+const auth = require('../../shared/middleware/auth.middleware');
+const permit = require('../../shared/middleware/permit.middleware');
 const router = express.Router();
 const fetch = require('node-fetch');
 
