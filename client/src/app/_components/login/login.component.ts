@@ -1,16 +1,19 @@
 import { AlertsService } from './../../_services/alerts.service';
 import { AuthService } from './../../_services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
+
   public form: FormGroup;
   public loading = false;
   public submitted = false;
@@ -28,6 +31,10 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   // convenience getter for easy access to form fields
@@ -50,6 +57,7 @@ export class LoginComponent implements OnInit {
     this.authService
       .login(this.f.username.value, this.f.password.value)
       .pipe(first())
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
           // get return url from query parameters or default to home page
