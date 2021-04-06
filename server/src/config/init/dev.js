@@ -4,36 +4,42 @@ const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
 
-/**
- * Establish DB connection
- */
-const DbService = require('./shared/services/db.service');
-const db = new DbService();
-db.connect()
-  .then((response) => console.log('Connected to DB'))
-  .catch((error) =>
-    console.log('An error occurs while connecting to the DB', error)
-  );
-
-/**
- * Load all routes
- */
-const userRouter = require('./features/users/users-routing');
-
-/**
- * Initialize express app
- */
-const app = express();
-const port = process.env.PORT;
-const publicDirectoryPath = path.join(__dirname, '../../client/dist');
-
 const initApp = async () => {
+  /**
+   * Establish DB connection
+   */
+  const DbService = require('../../shared/services/db.service');
+  const db = new DbService();
+  db.connect()
+    .then((response) => console.log('Connected to DB'))
+    .catch((error) =>
+      console.log('An error occurs while connecting to the DB', error)
+    );
+
+  /**
+   * Load all routes
+   */
+  const userRouter = require('../../features/users/users-routing');
+
+  /**
+   * Initialize express app
+   */
+  const app = express();
+  const port = process.env.PORT;
+  const publicDirectoryPath = path.join(__dirname, '../../../../client/dist');
+
+  /**
+   * Load all Middlewares
+   */
   app.use(express.static(publicDirectoryPath));
   app.use(compression());
   app.use(secure);
   app.use(cors());
   app.use(express.json());
 
+  /**
+   * Set all routes
+   */
   app.use(userRouter);
 
   // Va obbligatoriamente per ultima per poter essere utilizzata come
