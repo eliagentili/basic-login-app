@@ -18,7 +18,7 @@
     "server-postbuild": "cd server && npm install"
   },
   "engines": {
-    "node": "15.13.0"
+    "node": "14.16.1"
   },
   "repository": {
     "type": "git",
