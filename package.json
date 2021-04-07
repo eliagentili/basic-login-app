@@ -6,7 +6,7 @@
   "scripts": {
     "client": "cd client && npm start",
     "server": "cd server && npm run dev",
-    "build": "cd client && npm run build",
+    "build": "npm run client-postbuild && npm run server-postbuild",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "start": "cd server && npm start",
     "test": "npm run client-test",
@@ -15,8 +15,7 @@
     "client-coverage": "cd client && npm run test --no-watch --code-coverage && open coverage/index.html",
     "client-stats": "cd client && npm run stats",
     "client-postbuild": "cd client && npm install && npm run build",
-    "server-postbuild": "cd server && npm install",
-    "heroku-postbuild": "npm run client-postbuild && npm run server-postbuild"
+    "server-postbuild": "cd server && npm install"
   },
   "engines": {
     "node": "15.13.0"
