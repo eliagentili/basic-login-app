@@ -27,7 +27,7 @@
 # CMD ["nginx", "-g", "daemon off;"]
 
 #Step 1
-FROM node:12-alpine as build-step
+FROM node:15.13.0 as build-step
 
 WORKDIR /app
 
@@ -42,4 +42,4 @@ RUN npm run build
 # Step 2
 FROM nginx:1.17.1-alpine
 
-COPY --from=build-step app/dist/client /usr/share/nginx/html 
+COPY --from=build-step app/client/dist /usr/share/nginx/html 
