@@ -8,7 +8,7 @@
 # RUN npm run build:prod
 
 # build environment
-FROM node:15.13.0 as builder
+FROM node:15.13.0-alpine3.10
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
