@@ -1,45 +1,15 @@
-# # build environment
-# FROM node:9.6.1 as builder
-# RUN mkdir /usr/src/app
-# WORKDIR /usr/src/app
-# ENV PATH /usr/src/app/node_modules/.bin:$PATH
-# COPY . /usr/src/app
-# RUN npm install
-# RUN npm run build:prod
+FROM node:14-alpine
+RUN apk update && apk upgrade && \
+    apk add --no-cache git
 
-# # build environment
-# FROM node:15.13.0-alpine3.10
-# RUN mkdir /usr/src/app
-# WORKDIR /usr/src/app
-# ENV PATH /usr/src/app/node_modules/.bin:$PATH
-# COPY . /usr/src/app
-# RUN npm install
-# RUN npm run build
-# CMD ["npm", "start"]
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-# # production environment
-# FROM nginx:1.13.9-alpine
-# RUN rm -rf /etc/nginx/conf.d
-# RUN mkdir -p /etc/nginx/conf.d
-# COPY ./default.conf /etc/nginx/conf.d/
-# COPY --from=builder /usr/src/app/dist/caprover-angular-app /usr/share/nginx/html
-# EXPOSE 80
-# CMD ["nginx", "-g", "daemon off;"]
-
-#Step 1
-FROM node:15.13.0 as build-step
-
-WORKDIR /app
-
-COPY package.json /app
-
-RUN npm install
-
-COPY . /app
-
+COPY ./ /usr/src/app
+RUN npm install --production && npm cache clean --force
 RUN npm run build
+ENV NODE_ENV production
+ENV PORT 80
+EXPOSE 80
 
-# Step 2
-FROM nginx:1.17.1-alpine
-
-COPY --from=build-step app/client/dist /usr/share/nginx/html 
+CMD [ "npm", "start" ]
