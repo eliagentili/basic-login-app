@@ -1,37 +1,102 @@
-import { NgModule } from '@angular/core';
+/** Angular core modules */
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
-import { JwtModule } from '@auth0/angular-jwt';
-import { ReactiveFormsModule } from '@angular/forms';
-
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+/** Routes */
 import { AppRoutingModule } from './app-routing.module';
-import { AuthGuard } from './_guards/auth.guard';
-import { AuthService } from './_services/auth.service';
+/** Modules */
 import { AppComponent } from './app.component';
-import { AlertsComponent } from './_components/alerts/alerts.component';
-import { LoginComponent } from './_components/login/login.component';
-import { HomeComponent } from './_components/home/home.component';
+import { AuthModule } from '@app/auth/auth.module';
+
+import { ComponentsModule } from '@shared/components';
+import { ContainersModule } from '@shared/containers';
+import { ErrorsModule } from '@app/shared/errors';
+import { HttpServiceModule } from '@shared/async-services/http';
+import { UtilityModule } from '@shared/utility';
+/** guards */
+import { AuthGuard } from '@shared/guards/auth.guard';
+import { CanDeactivateGuard } from '@shared/guards/can-deactivate.guard';
+/** Services */
+import { ConfigService } from './app-config.service';
+/** Third party modules */
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { JwtModule } from '@auth0/angular-jwt';
+
+/**
+ * Calling functions or calling new is not supported in metadata when using AoT.
+ * The work-around is to introduce an exported function.
+ *
+ * The reason for this limitation is that the AoT compiler needs to generate the code that calls the factory
+ * and there is no way to import a lambda from a module, you can only import an exported symbol.
+ */
+
+export function configServiceFactory(config: ConfigService): any {
+  return () => config.load();
+}
+
+export function HttpLoaderFactory(http: HttpClient): any {
+  return new TranslateHttpLoader(http);
+}
+
+export function tokenGetter(): string {
+  return localStorage.getItem('id_token');
+}
 
 @NgModule({
-  declarations: [AppComponent, AlertsComponent, LoginComponent, HomeComponent],
+  declarations: [AppComponent],
   imports: [
+    /** Angular core dependencies */
     BrowserModule,
     HttpClientModule,
+
+    /** App custom dependencies */
+    AuthModule,
     AppRoutingModule,
-    ReactiveFormsModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: () => {
-          return localStorage.getItem('access_token');
-        },
-        allowedDomains: ['localhost:3000'],
-        disallowedRoutes: ['http://localhost:3000/users/login'],
+
+    ComponentsModule,
+    ContainersModule,
+    ErrorsModule,
+    HttpServiceModule.forRoot(),
+    UtilityModule.forRoot(),
+
+    /** Third party modules */
+    NgbModule,
+    SimpleNotificationsModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
       },
     }),
-    NgbModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter,
+        allowedDomains: ['localhost:3000'],
+        disallowedRoutes: [
+          '/config/env.json',
+          '/config/development.json',
+          '/config/production.json',
+          '/assets/i18n/en.json',
+          'localhost:3000/auth/',
+        ],
+      },
+    }),
   ],
-  providers: [AuthService, AuthGuard],
+  providers: [
+    AuthGuard,
+    CanDeactivateGuard,
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configServiceFactory,
+      deps: [ConfigService],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
