@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open",
-    "build": "ng build --prod --aot=true",
+    "build": "ng build --prod",
     "stats": "ng build --stats-json && webpack-bundle-analyzer dist/stats.json",
     "test": "ng test",
     "lint": "ng lint",
